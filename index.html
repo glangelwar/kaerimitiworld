@@ -12,7 +12,7 @@
             --sea-color: #673AB7;
             --river-color: #2196F3;
             --cave-color: #795548;
-            --plain-color: #FB8C00; /* 人物の平原の色を追加 */
+            --plain-color: #FF9800;
             --main-bg: #f5f5f5;
             --modal-bg: rgba(0, 0, 0, 0.5);
         }
@@ -87,7 +87,6 @@
             left: calc(70% - 60px);
         }
         
-        /* 人物の平原を追加 */
         .plain {
             background-color: var(--plain-color);
             top: 300px;
@@ -207,57 +206,6 @@
             margin-right: 10px;
         }
         
-        /* フィルターボタンのスタイル */
-        .filter-btn {
-            padding: 8px 16px;
-            margin: 5px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .filter-btn.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .post-location {
-            font-size: 0.8em;
-            color: #555;
-            margin-bottom: 5px;
-            background-color: #f1f1f1;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        
-        /* デバッグパネル - 通常は非表示 */
-        .debug-panel {
-            display: none; /* 本番環境では非表示 */
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 9999;
-            max-width: 300px;
-            max-height: 200px;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 12px;
-        }
-        
-        /* アニメーション効果 */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .modal {
-            animation: fadeIn 0.3s ease;
-        }
-        
         /* Ensure continuous flow for PDF export */
         @media print {
             .modal, .modal-content {
@@ -283,46 +231,41 @@
         
         <!-- Top tabs for switching perspectives -->
         <div class="flex justify-center mb-8">
-            <div id="tab-ritsu" class="tab active">律の視点</div>
-            <div id="tab-shuya" class="tab">周也の視点</div>
+            <div id="tab-ritsu" class="tab active" onclick="switchTab('ritsu')">律の視点</div>
+            <div id="tab-shuya" class="tab" onclick="switchTab('shuya')">周也の視点</div>
         </div>
         
         <!-- Perspective map -->
         <div class="relative" style="height: 550px; border: 2px dashed #ccc; border-radius: 50%; width: 80%; max-width: 600px; margin: 0 auto;">
-            <div id="hill-btn" class="perspective-point hill">
-                物語の丘
+            <div class="perspective-point hill" onclick="openModal('hill')">
+                出来事の丘
                 <div class="progress-badge">0%</div>
             </div>
-            <div id="forest-btn" class="perspective-point forest">
+            <div class="perspective-point forest" onclick="openModal('forest')">
                 心情の森
                 <div class="progress-badge">0%</div>
             </div>
-            <div id="sea-btn" class="perspective-point sea">
+            <div class="perspective-point plain" onclick="openModal('plain')">
+                人物の平原
+                <div class="progress-badge">0%</div>
+            </div>
+            <div class="perspective-point sea" onclick="openModal('sea')">
                 問いの海
                 <div class="progress-badge">0%</div>
             </div>
-            <div id="river-btn" class="perspective-point river">
+            <div class="perspective-point river" onclick="openModal('river')">
                 表現の川
                 <div class="progress-badge">0%</div>
             </div>
-            <div id="cave-btn" class="perspective-point cave">
+            <div class="perspective-point cave" onclick="openModal('cave')">
                 構造の洞窟
-                <div class="progress-badge">0%</div>
-            </div>
-            <!-- 人物の平原を追加 -->
-            <div id="plain-btn" class="perspective-point plain">
-                人物の平原
                 <div class="progress-badge">0%</div>
             </div>
         </div>
         
-        <div class="text-center mt-8 flex justify-center flex-wrap">
-            <button id="story-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2">
+        <div class="text-center mt-8">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="openModal('story')">
                 本文を読む
-            </button>
-            <!-- 投稿一覧ボタンを追加 -->
-            <button id="allposts-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2">
-                投稿一覧を見る
             </button>
         </div>
         
@@ -336,23 +279,17 @@
         </div>
     </div>
     
-    <!-- Debug Panel -->
-    <div id="debug-panel" class="debug-panel">
-        <div>デバッグログ:</div>
-        <div id="debug-log"></div>
-    </div>
-    
     <!-- Story Modal -->
     <div id="story-modal" class="modal">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold">帰り道</h2>
-                <span id="story-close" class="text-3xl cursor-pointer">&times;</span>
+                <span class="text-3xl cursor-pointer" onclick="closeModal('story')">&times;</span>
             </div>
             
             <div class="mb-4">
-                <div id="story-tab-ritsu" class="tab active">律の視点</div>
-                <div id="story-tab-shuya" class="tab">周也の視点</div>
+                <div id="story-tab-ritsu" class="tab active" onclick="switchStoryTab('ritsu')">律の視点</div>
+                <div id="story-tab-shuya" class="tab" onclick="switchStoryTab('shuya')">周也の視点</div>
             </div>
             
             <div id="story-content-ritsu" class="tab-content" style="display: block;">
@@ -397,7 +334,7 @@
                     <div>
                         <input type="text" id="story-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
                         <textarea id="story-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
-                        <button id="story-ritsu-post-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                        <button onclick="addPost('story-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
                     </div>
                 </div>
             </div>
@@ -421,7 +358,7 @@
                 <p class="mb-4">ぼくがむだに放ってきた球の逆襲。「うおっ」と思わずとび上がったら、後ろからも「何これ」と律の声がして、ぼくたちは全身に雨を浴びながら、しばらくのあいだばたばたと暴れまくった。はねあがる水しぶき。びしょぬれのくつ。たがいのあわてっぷり。何もかもがむしょうにおかしくて、雨が通りすぎるなり、笑いがあふれだした。律もいっしょに笑ってくれたのがうれしくて、ぼくはことさらに大声をはりあげた。</p>
                 <p class="mb-4">はっとしたのは、爆発的な笑いが去った後、律が急にひとみを険しくしてつぶやいたときだ。</p>
                 <p class="mb-4">「ぼく、晴れが好きだけど、たまには、雨も好きだ。ほんとに両方、好きなんだ」</p>
-                <p class="mb-4">たしかに、そうだ。晴れがいいけど、こんな雨なら大かんげい。どっちも好きってこともある。心で賛成しながらも、ぼくはとっさにそれを言葉にできなかった。こんなときにかぎって口が動かず、できたのは、だまってうなずくだけ。なのに、なぜだか律は雨上がりみたいなえがおにもどった。                <p class="mb-4">たしかに、そうだ。晴れがいいけど、こんな雨なら大かんげい。どっちも好きってこともある。心で賛成しながらも、ぼくはとっさにそれを言葉にできなかった。こんなときにかぎって口が動かず、できたのは、だまってうなずくだけ。なのに、なぜだか律は雨上がりみたいなえがおにもどって、ぼくにうなずきかえしたんだ。</p>
+                <p class="mb-4">たしかに、そうだ。晴れがいいけど、こんな雨なら大かんげい。どっちも好きってこともある。心で賛成しながらも、ぼくはとっさにそれを言葉にできなかった。こんなときにかぎって口が動かず、できたのは、だまってうなずくだけ。なのに、なぜだか律は雨上がりみたいなえがおにもどって、ぼくにうなずきかえしたんだ。</p>
                 <p class="mb-4">「行こっか」</p>
                 <p class="mb-4">「うん」</p>
                 <p class="mb-4">しめった土のにおいがただようトンネルを、律と並んで再び歩きだしながら、ひょっとして――と、ぼくは思った。投げそこなった。でも、ぼくは初めて、律の言葉をちゃんと受けとめられたのかもしれない。</p>
@@ -435,7 +372,7 @@
                     <div>
                         <input type="text" id="story-shuya-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
                         <textarea id="story-shuya-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
-                        <button id="story-shuya-post-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                        <button onclick="addPost('story-shuya')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
                     </div>
                 </div>
             </div>
@@ -446,19 +383,19 @@
     <div id="hill-modal" class="modal">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">物語の丘</h2>
-                <span id="hill-close" class="text-3xl cursor-pointer">&times;</span>
+                <h2 class="text-2xl font-bold">出来事の丘</h2>
+                <span class="text-3xl cursor-pointer" onclick="closeModal('hill')">&times;</span>
             </div>
             
             <div class="mb-4">
-                <div id="hill-tab-ritsu" class="tab active">律の視点</div>
-                <div id="hill-tab-shuya" class="tab">周也の視点</div>
+                <div id="hill-tab-ritsu" class="tab active" onclick="switchModalTab('hill', 'ritsu')">律の視点</div>
+                <div id="hill-tab-shuya" class="tab" onclick="switchModalTab('hill', 'shuya')">周也の視点</div>
             </div>
             
             <div id="hill-content-ritsu" class="tab-content" style="display: block;">
                 <p>物語の展開や出来事に注目して読んでみましょう。物語のストーリー展開を山の起伏のように捉え、重要な出来事を見つけていきます。</p>
                 
-                <button id="hill-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">ヒントを見る</button>
+                <button id="hill-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('hill-ritsu')">ヒントを見る</button>
                 
                 <div id="hill-ritsu-hint" class="hint-content">
                     <p>「律」の視点から見た物語の主な出来事の流れを考えてみましょう：</p>
@@ -470,7 +407,7 @@
                         <li>勇気を出して本当の気持ちを伝える場面</li>
                     </ol>
                     
-                    <button id="hill-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">もっと詳しいヒント</button>
+                    <button id="hill-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('hill-ritsu')">もっと詳しいヒント</button>
                     
                     <div id="hill-ritsu-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
                         <p>物語の中の次のような言葉に注目してみましょう：</p>
@@ -504,7 +441,7 @@
                     <div>
                         <input type="text" id="hill-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
                         <textarea id="hill-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
-                        <button id="hill-ritsu-post-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                        <button onclick="addPost('hill-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
                     </div>
                 </div>
             </div>
@@ -512,7 +449,7 @@
             <div id="hill-content-shuya" class="tab-content">
                 <p>物語の展開や出来事に注目して読んでみましょう。物語のストーリー展開を山の起伏のように捉え、重要な出来事を見つけていきます。</p>
                 
-                <button id="hill-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">ヒントを見る</button>
+                <button id="hill-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('hill-shuya')">ヒントを見る</button>
                 
                 <div id="hill-shuya-hint" class="hint-content">
                     <p>「周也」の視点から見た物語の主な出来事の流れを考えてみましょう：</p>
@@ -524,7 +461,7 @@
                         <li>律の本当の気持ちを受け止める場面</li>
                     </ol>
                     
-                    <button id="hill-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">もっと詳しいヒント</button>
+                    <button id="hill-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('hill-shuya')">もっと詳しいヒント</button>
                     
                     <div id="hill-shuya-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
                         <p>物語の中の次のような言葉に注目してみましょう：</p>
@@ -558,7 +495,7 @@
                     <div>
                         <input type="text" id="hill-shuya-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
                         <textarea id="hill-shuya-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
-                        <button id="hill-shuya-post-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                        <button onclick="addPost('hill-shuya')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
                     </div>
                 </div>
             </div>
@@ -570,18 +507,18 @@
         <div class="modal-content">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold">心情の森</h2>
-                <span id="forest-close" class="text-3xl cursor-pointer">&times;</span>
+                <span class="text-3xl cursor-pointer" onclick="closeModal('forest')">&times;</span>
             </div>
             
             <div class="mb-4">
-                <div id="forest-tab-ritsu" class="tab active">律の視点</div>
-                <div id="forest-tab-shuya" class="tab">周也の視点</div>
+                <div id="forest-tab-ritsu" class="tab active" onclick="switchModalTab('forest', 'ritsu')">律の視点</div>
+                <div id="forest-tab-shuya" class="tab" onclick="switchModalTab('forest', 'shuya')">周也の視点</div>
             </div>
             
             <div id="forest-content-ritsu" class="tab-content" style="display: block;">
                 <p>登場人物たちの心情や感情の変化に注目して読んでみましょう。広がる森のように、豊かな心情表現を探っていきます。</p>
                 
-                <button id="forest-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">ヒントを見る</button>
+                <button id="forest-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('forest-ritsu')">ヒントを見る</button>
                 
                 <div id="forest-ritsu-hint" class="hint-content">
                     <p>「律」の感情や心情の変化を考えてみましょう：</p>
@@ -593,7 +530,7 @@
                         <li>自分の本当の気持ちを伝えた後の安堵感</li>
                     </ol>
                     
-                    <button id="forest-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">もっと詳しいヒント</button>
+                    <button id="forest-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('forest-ritsu')">もっと詳しいヒント</button>
                     
                     <div id="forest-ritsu-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
                         <p>律の心情が表れている次のような言葉に注目してみましょう：</p>
@@ -628,7 +565,7 @@
                     <div>
                         <input type="text" id="forest-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
                         <textarea id="forest-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
-                        <button id="forest-ritsu-post-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                        <button onclick="addPost('forest-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
                     </div>
                 </div>
             </div>
@@ -636,7 +573,7 @@
             <div id="forest-content-shuya" class="tab-content">
                 <p>登場人物たちの心情や感情の変化に注目して読んでみましょう。広がる森のように、豊かな心情表現を探っていきます。</p>
                 
-                <button id="forest-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">ヒントを見る</button>
+                <button id="forest-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('forest-shuya')">ヒントを見る</button>
                 
                 <div id="forest-shuya-hint" class="hint-content">
                     <p>「周也」の感情や心情の変化を考えてみましょう：</p>
@@ -648,7 +585,7 @@
                         <li>律の言葉を初めて本当に受け止めたときの感覚</li>
                     </ol>
                     
-                    <button id="forest-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">もっと詳しいヒント</button>
+                    <button id="forest-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('forest-shuya')">もっと詳しいヒント</button>
                     
                     <div id="forest-shuya-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
                         <p>周也の心情が表れている次のような言葉に注目してみましょう：</p>
@@ -683,10 +620,834 @@
                     <div>
                         <input type="text" id="forest-shuya-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
                         <textarea id="forest-shuya-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
-                        <button id="forest-shuya-post-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                        <button onclick="addPost('forest-shuya')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
+    <!-- Plain Modal (新規追加) -->
+    <div id="plain-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">人物の平原</h2>
+                <span class="text-3xl cursor-pointer" onclick="closeModal('plain')">&times;</span>
+            </div>
+            
+            <div class="mb-4">
+                <div id="plain-tab-ritsu" class="tab active" onclick="switchModalTab('plain', 'ritsu')">律について</div>
+                <div id="plain-tab-shuya" class="tab" onclick="switchModalTab('plain', 'shuya')">周也について</div>
+            </div>
+            
+            <div id="plain-content-ritsu" class="tab-content" style="display: block;">
+                <p>登場人物「律」の人物像や特徴について考えてみましょう。平原のように広がる人物の特性を探っていきます。</p>
+                
+                <button id="plain-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('plain-ritsu')">ヒントを見る</button>
+                
+                <div id="plain-ritsu-hint" class="hint-content">
+                    <p>「律」の人物像や特徴を考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>どのような性格の持ち主だと思いますか？</li>
+                        <li>周也とはどのような関係性ですか？</li>
+                        <li>律の悩みや葛藤はどのようなものですか？</li>
+                        <li>律の考え方や価値観の特徴は何ですか？</li>
+                        <li>律はこの物語を通じてどのように成長しましたか？</li>
+                    </ol>
+                    
+                    <button id="plain-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('plain-ritsu')">もっと詳しいヒント</button>
+                    
+                    <div id="plain-ritsu-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>律の人物像が表れている次のような言葉に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>「そのテンポに、ぼくだけついていけなかった。『どっちかなあ』とか、『どっちもかな』とか、ひとりでごにょごにょ言っていたら...」</li>
+                            <li>「どうして、ぼく、すぐに立ち止まっちゃうんだろう。思っていることが、なんで言えないんだろう。」</li>
+                            <li>「ぼくは海のこんなところが好きだ。山のこんなところも好きだ。その『こんな』をうまく言葉にできたなら、周也とちゃんとかたを並べて、歩いていけるのかな。」</li>
+                            <li>「今、言わなきゃ、きっと二度と言えない。」「ぼく、晴れが好きだけど、たまには、雨も好きだ」「ほんとに両方、好きなんだ」</li>
+                            <li>物語の中で周也は律のことを「律のほうはちんもくなんてちっとも気にせず、いつだって、マイペースなものだったけど。」と表現しています。</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="plain-ritsu-check1" onchange="updateProgress('plain')">
+                        <label for="plain-ritsu-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="plain-ritsu-check2" onchange="updateProgress('plain')">
+                        <label for="plain-ritsu-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="plain-ritsu-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="plain-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="plain-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('plain-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="plain-content-shuya" class="tab-content">
+                <p>登場人物「周也」の人物像や特徴について考えてみましょう。平原のように広がる人物の特性を探っていきます。</p>
+                
+                <button id="plain-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('plain-shuya')">ヒントを見る</button>
+                
+                <div id="plain-shuya-hint" class="hint-content">
+                    <p>「周也」の人物像や特徴を考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>どのような性格の持ち主だと思いますか？</li>
+                        <li>律とはどのような関係性ですか？</li>
+                        <li>周也の悩みや葛藤はどのようなものですか？</li>
+                        <li>周也の考え方や価値観の特徴は何ですか？</li>
+                        <li>周也はこの物語を通じてどのように成長しましたか？</li>
+                    </ol>
+                    
+                    <button id="plain-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('plain-shuya')">もっと詳しいヒント</button>
+                    
+                    <div id="plain-shuya-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>周也の人物像が表れている次のような言葉に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>「昼休み、みんなで話をしていたとき、はっきりしない律にじりじりして、つい、言わなくてもいいことを言った。」</li>
+                            <li>「気まずいちんもくにたえられず、またぺらぺらとよけいなことばかりしゃべっている自分がいた。」</li>
+                            <li>「ぼくは一人でぽんぽん球を放っているだけで、それじゃ、ピンポンの壁打ちといっしょ」</li>
+                            <li>「だれかといるときのちんもくが苦手だ。たちまち、そわそわと落ちつきをなくす。何か言わなきゃってあせる。」</li>
+                            <li>「投げそこなった。でも、ぼくは初めて、律の言葉をちゃんと受けとめられたのかもしれない。」</li>
+                            <li>物語の中で律が周也についてこう言っています：「ぼくより半年早く生まれた周也は、これからもずっと、どんなこともテンポよく乗りこえて、ぐんぐん前へ進んで行くんだろう。」</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="plain-shuya-check1" onchange="updateProgress('plain')">
+                        <label for="plain-shuya-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="plain-shuya-check2" onchange="updateProgress('plain')">
+                        <label for="plain-shuya-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="plain-shuya-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="plain-shuya-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="plain-shuya-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('plain-shuya')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sea Modal -->
+    <div id="sea-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">問いの海</h2>
+                <span class="text-3xl cursor-pointer" onclick="closeModal('sea')">&times;</span>
+            </div>
+            
+            <div class="mb-4">
+                <div id="sea-tab-ritsu" class="tab active" onclick="switchModalTab('sea', 'ritsu')">律の視点</div>
+                <div id="sea-tab-shuya" class="tab" onclick="switchModalTab('sea', 'shuya')">周也の視点</div>
+            </div>
+            
+            <div id="sea-content-ritsu" class="tab-content" style="display: block;">
+                <p>物語から生まれる問いや疑問に注目して読んでみましょう。海のように広がる様々な問いを探究していきます。</p>
+                
+                <button id="sea-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('sea-ritsu')">ヒントを見る</button>
+                
+                <div id="sea-ritsu-hint" class="hint-content">
+                    <p>「律」の視点から生まれる問いを考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>「どっちも好き」は本当に「どっちも好きじゃない」と同じなのだろうか？</li>
+                        <li>自分の考えを明確に言葉にすることの難しさはなぜあるのか？</li>
+                        <li>天気雨が二人に与えた影響は何だったのか？</li>
+                        <li>勇気を出して本音を伝えることの意味は？</li>
+                        <li>相手に自分の気持ちが理解されるとはどういうことか？</li>
+                    </ol>
+                    
+                    <button id="sea-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('sea-ritsu')">もっと詳しいヒント</button>
+                    
+                    <div id="sea-ritsu-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>問いについて考えるときに、次のような本文の言葉に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>「『どっちも好き』と『どっちも好きじゃない』がいっしょなら、『言えなかったこと』と『なかったこと』もいっしょになっちゃうのかな。」</li>
+                            <li>「どうして、ぼく、すぐに立ち止まっちゃうんだろう。思っていることが、なんで言えないんだろう。」</li>
+                            <li>「ぼくは海のこんなところが好きだ。山のこんなところも好きだ。その『こんな』をうまく言葉にできたなら、周也とちゃんとかたを並べて、歩いていけるのかな。」</li>
+                            <li>「ざざっと水が降ってきて、何かを洗い流した。」</li>
+                            <li>「わかってもらえた気がした。」</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="sea-ritsu-check1" onchange="updateProgress('sea')">
+                        <label for="sea-ritsu-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="sea-ritsu-check2" onchange="updateProgress('sea')">
+                        <label for="sea-ritsu-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="sea-ritsu-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="sea-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="sea-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('sea-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="sea-content-shuya" class="tab-content">
+                <p>物語から生まれる問いや疑問に注目して読んでみましょう。海のように広がる様々な問いを探究していきます。</p>
+                
+                <button id="sea-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('sea-shuya')">ヒントを見る</button>
+                
+                <div id="sea-shuya-hint" class="hint-content">
+                    <p>「周也」の視点から生まれる問いを考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>相手を傷つけてしまう言葉の重さとは？</li>
+                        <li>会話のキャッチボールとはどういうことか？</li>
+                        <li>黙っていることの居心地の悪さはなぜ生まれるのか？</li>
+                        <li>「いい球」とは何か？どういう会話が相手に届くのか？</li>
+                        <li>本当に相手の言葉を受け止めるとはどういうことか？</li>
+                    </ol>
+                    
+                    <button id="sea-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('sea-shuya')">もっと詳しいヒント</button>
+                    
+                    <div id="sea-shuya-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>問いについて考えるときに、次のような本文の言葉に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>「軽くつっこんだつもりが、律の顔を見て、重くひびいてしまったのが分かった。」</li>
+                            <li>「『周也。あなた、おしゃべりなくせして、どうして会話のキャッチボールができないの。会話っていうのは、相手の言葉を受け止めて、それをきちんと投げ返すことよ。』」</li>
+                            <li>「たしかに、ぼくの言葉は軽すぎる。ぽんぽん、むだに打ちすぎる。もっとじっくりねらいを定めて、いい球を投げられたなら、律だって何か返してくれるんじゃないか。」</li>
+                            <li>「でも、いい球って、どんなのだろう。考えたとたんに、舌が止まった。」</li>
+                            <li>「投げそこなった。でも、ぼくは初めて、律の言葉をちゃんと受けとめられたのかもしれない。」</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="sea-shuya-check1" onchange="updateProgress('sea')">
+                        <label for="sea-shuya-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="sea-shuya-check2" onchange="updateProgress('sea')">
+                        <label for="sea-shuya-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="sea-shuya-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="sea-shuya-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="sea-shuya-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('sea-shuya')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- River Modal -->
+    <div id="river-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">表現の川</h2>
+                <span class="text-3xl cursor-pointer" onclick="closeModal('river')">&times;</span>
+            </div>
+            
+            <div class="mb-4">
+                <div id="river-tab-ritsu" class="tab active" onclick="switchModalTab('river', 'ritsu')">律の視点</div>
+                <div id="river-tab-shuya" class="tab" onclick="switchModalTab('river', 'shuya')">周也の視点</div>
+            </div>
+            
+            <div id="river-content-ritsu" class="tab-content" style="display: block;">
+                <p>物語で使われている言葉や表現に注目して読んでみましょう。川の流れのように、豊かな表現を発見していきます。</p>
+                
+                <button id="river-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('river-ritsu')">ヒントを見る</button>
+                
+                <div id="river-ritsu-hint" class="hint-content">
+                    <p>「律」の視点での特徴的な表現を考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>心情や感情を表す比喩表現</li>
+                        <li>情景描写と心情の結びつき</li>
+                        <li>沈黙や距離感を表す言葉</li>
+                        <li>天気雨の描写と象徴性</li>
+                        <li>心の変化を表す表現</li>
+                    </ol>
+                    
+                    <button id="river-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('river-ritsu')">もっと詳しいヒント</button>
+                    
+                    <div id="river-ritsu-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>律の視点での特徴的な表現に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>「周也と二人きりの帰り道が、はてしなく遠く感じられる。」</li>
+                            <li>「まるでなんにもなかったみたいに、周也はふだんと変わらない。ぼくだけがあのことを引きずっているみたいで、一歩前を行く紺色のパーカーが、どんどんにくらしく見えてくる。」</li>
+                            <li>「先のとがったするどいものが、みぞおちのあたりにずきっとささった。そんな気がした。そのまま今もささり続けて、歩いても、歩いても、ふりおとせない。」</li>
+                            <li>「空一面からシャワーの水が降ってきた。」</li>
+                            <li>「ざざっと水が降ってきて、何かを洗い流した。周也の気どった前がみがぺたっとなったのがゆかいで、ぼくはさんざん腹をかかえ、気がつくと、みぞおちの異物が消えてきた。」</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="river-ritsu-check1" onchange="updateProgress('river')">
+                        <label for="river-ritsu-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="river-ritsu-check2" onchange="updateProgress('river')">
+                        <label for="river-ritsu-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="river-ritsu-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="river-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="river-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('river-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="river-content-shuya" class="tab-content">
+                <p>物語で使われている言葉や表現に注目して読んでみましょう。川の流れのように、豊かな表現を発見していきます。</p>
+                
+                <button id="river-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('river-shuya')">ヒントを見る</button>
+                
+                <div id="river-shuya-hint" class="hint-content">
+                    <p>「周也」の視点での特徴的な表現を考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>会話や言葉についてのたとえ</li>
+                        <li>自分の言動への内省を表す表現</li>
+                        <li>沈黙への不安を表す言葉</li>
+                        <li>天気雨とピンポン球を結びつける比喩</li>
+                        <li>相手の言葉を受け止める感覚の表現</li>
+                    </ol>
+                    
+                    <button id="river-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('river-shuya')">もっと詳しいヒント</button>
+                    
+                    <div id="river-shuya-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>周也の視点での特徴的な表現に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>「何もなかったみたいにふるまえば、何もなかったことになる。」</li>
+                            <li>「何を言っても、背中ごしに聞こえてくるのは、さえない足音だけ。ぼくがしゃべればしゃべるほど、その音は遠のいていくような気がする。」</li>
+                            <li>「会話っていうのは、相手の言葉を受け止めて、それをきちんと投げ返すことよ。あなたは一人でぽんぽん球を放っているだけで、それじゃ、ピンポンの壁打ちといっしょ」</li>
+                            <li>「ピンポン球のことばかり考えていたせいか、空からじゃんじゃん降ってくるそれが、ぼくの目には一しゅん、無数の白い球みたいに映ったんだ。」</li>
+                            <li>「投げそこなった。でも、ぼくは初めて、律の言葉をちゃんと受けとめられたのかもしれない。」</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="river-shuya-check1" onchange="updateProgress('river')">
+                        <label for="river-shuya-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="river-shuya-check2" onchange="updateProgress('river')">
+                        <label for="river-shuya-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="river-shuya-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="river-shuya-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="river-shuya-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('river-shuya')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cave Modal -->
+    <div id="cave-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">構造の洞窟</h2>
+                <span class="text-3xl cursor-pointer" onclick="closeModal('cave')">&times;</span>
+            </div>
+            
+            <div class="mb-4">
+                <div id="cave-tab-ritsu" class="tab active" onclick="switchModalTab('cave', 'ritsu')">律の視点</div>
+                <div id="cave-tab-shuya" class="tab" onclick="switchModalTab('cave', 'shuya')">周也の視点</div>
+            </div>
+            
+            <div id="cave-content-ritsu" class="tab-content" style="display: block;">
+                <p>物語の構成や視点に注目して読んでみましょう。洞窟の奥深くまで探るように、物語の構造を分析していきます。</p>
+                
+                <button id="cave-ritsu-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('cave-ritsu')">ヒントを見る</button>
+                
+                <div id="cave-ritsu-hint" class="hint-content">
+                    <p>「帰り道」の構造的な特徴を考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>2つの視点（律と周也）で語られる物語の構成</li>
+                        <li>同じ出来事に対する異なる捉え方</li>
+                        <li>律視点（第1部）の特徴</li>
+                        <li>天気雨が物語の転換点となる構造</li>
+                        <li>「言葉を伝える/受け止める」というテーマと構造の関係</li>
+                    </ol>
+                    
+                    <button id="cave-ritsu-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('cave-ritsu')">もっと詳しいヒント</button>
+                    
+                    <div id="cave-ritsu-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>律の視点から見た物語の構造を考えるときに、次のような点に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>第1部は「律」の一人称視点で描かれています。「今日のぼくには、周也と二人きりの帰り道が、はてしなく遠く感じられる。」</li>
+                            <li>律は周也の言動をどのように受け止めているか：「まるでなんにもなかったみたいに、周也はふだんと変わらない。ぼくだけがあのことを引きずっているみたいで」</li>
+                            <li>物語の過去回想部分（昼休みの出来事）：「『どっちも好きってのは、どっちも好きじゃないのと、いっしょじゃないの』」</li>
+                            <li>天気雨の場面が物語の転換点になっている：「ざざっと水が降ってきて、何かを洗い流した。」</li>
+                            <li>律が自分の気持ちを言葉にして伝える場面：「ぼく、晴れが好きだけど、たまには、雨も好きだ」「ほんとに両方、好きなんだ」</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="cave-ritsu-check1" onchange="updateProgress('cave')">
+                        <label for="cave-ritsu-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="cave-ritsu-check2" onchange="updateProgress('cave')">
+                        <label for="cave-ritsu-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="cave-ritsu-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="cave-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="cave-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('cave-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="cave-content-shuya" class="tab-content">
+                <p>物語の構成や視点に注目して読んでみましょう。洞窟の奥深くまで探るように、物語の構造を分析していきます。</p>
+                
+                <button id="cave-shuya-hint-btn" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="showHint('cave-shuya')">ヒントを見る</button>
+                
+                <div id="cave-shuya-hint" class="hint-content">
+                    <p>「帰り道」の構造的な特徴を考えてみましょう：</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>2つの視点（律と周也）で語られる物語の構成</li>
+                        <li>同じ出来事に対する異なる捉え方</li>
+                        <li>周也視点（第2部）の特徴</li>
+                        <li>天気雨が物語の転換点となる構造</li>
+                        <li>「言葉を伝える/受け止める」というテーマと構造の関係</li>
+                    </ol>
+                    
+                    <button id="cave-shuya-detail-btn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded" onclick="showDetailHint('cave-shuya')">もっと詳しいヒント</button>
+                    
+                    <div id="cave-shuya-detail-hint" class="mt-4 p-3 bg-blue-50 rounded" style="display: none;">
+                        <p>周也の視点から見た物語の構造を考えるときに、次のような点に注目してみましょう：</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>第2部は「周也」の一人称視点で描かれています。「何もなかったみたいにふるまえば、何もなかったことになる。そんなあまい考えをすてたのは、校門を出てから数分後、最初の角を曲がったあたりだった。」</li>
+                            <li>周也は律の様子をどのように捉えているか：「どんなに必死で話題をふっても、律はうんともすんとも言わない。背中に感じる気配は冷たくなるばかり。やっぱり、律はおこってるんだ。」</li>
+                            <li>物語の過去回想部分（昼休みの出来事）：「昼休み、みんなで話をしていたとき、はっきりしない律にじりじりして、つい、言わなくてもいいことを言った。」</li>
+                            <li>天気雨の場面が物語の転換点になっている：「ぼくの目には一しゅん、無数の白い球みたいに映ったんだ。」</li>
+                            <li>周也が律の言葉を受け止める場面：「たしかに、そうだ。晴れがいいけど、こんな雨なら大かんげい。どっちも好きってこともある。心で賛成しながらも、ぼくはとっさにそれを言葉にできなかった。」</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <div class="checkpoint">
+                        <input type="checkbox" id="cave-shuya-check1" onchange="updateProgress('cave')">
+                        <label for="cave-shuya-check1">自分なりにこの視点で読みましたか？</label>
+                    </div>
+                    <div class="checkpoint">
+                        <input type="checkbox" id="cave-shuya-check2" onchange="updateProgress('cave')">
+                        <label for="cave-shuya-check2">友達と交流しましたか？</label>
+                    </div>
+                </div>
+                
+                <!-- Post form -->
+                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                    <div id="cave-shuya-posts" class="mb-4">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                    <div>
+                        <input type="text" id="cave-shuya-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
+                        <textarea id="cave-shuya-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
+                        <button onclick="addPost('cave-shuya')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete confirmation modal -->
+    <div id="delete-modal" class="delete-modal">
+        <div class="delete-modal-content">
+            <p class="mb-4">削除するには管理者パスワードを入力してください</p>
+            <input type="password" id="admin-password" class="w-full p-2 mb-4 border rounded" placeholder="パスワード">
+            <div class="flex justify-between">
+                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onclick="cancelDelete()">キャンセル</button>
+                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="confirmDelete()">削除</button>
+            </div>
+            <p id="password-error" class="text-red-500 mt-2" style="display: none;">パスワードが違います</p>
+        </div>
+    </div>
+    
+    <script>
+        // Store the current active perspective and target
+        let currentPerspective = 'ritsu';
+        let deleteTarget = null;
+        
+        // Initialize localStorage data structure if not exists
+        function initLocalStorage() {
+            if (!localStorage.getItem('kaerimichiPosts')) {
+                localStorage.setItem('kaerimichiPosts', JSON.stringify({}));
+            }
+            
+            if (!localStorage.getItem('kaerimichiProgress')) {
+                localStorage.setItem('kaerimichiProgress', JSON.stringify({
+                    'hill': 0,
+                    'forest': 0,
+                    'sea': 0,
+                    'river': 0,
+                    'cave': 0,
+                    'plain': 0
+                }));
+            } else {
+                // 既存のプログレスデータに新しいプレーンを追加
+                const progress = JSON.parse(localStorage.getItem('kaerimichiProgress'));
+                if (!progress.hasOwnProperty('plain')) {
+                    progress['plain'] = 0;
+                    localStorage.setItem('kaerimichiProgress', JSON.stringify(progress));
+                }
+            }
+        }
+        
+        // Load data on page load
+        window.onload = function() {
+            initLocalStorage();
+            loadAllPosts();
+            updateAllProgress();
+        };
+        
+        // Switch between Ritsu and Shuya perspectives
+        function switchTab(perspective) {
+            currentPerspective = perspective;
+            document.getElementById('tab-ritsu').classList.remove('active');
+            document.getElementById('tab-shuya').classList.remove('active');
+            document.getElementById('tab-' + perspective).classList.add('active');
+        }
+        
+        // Switch between story tabs
+        function switchStoryTab(perspective) {
+            document.getElementById('story-tab-ritsu').classList.remove('active');
+            document.getElementById('story-tab-shuya').classList.remove('active');
+            document.getElementById('story-tab-' + perspective).classList.add('active');
+            
+            document.getElementById('story-content-ritsu').style.display = 'none';
+            document.getElementById('story-content-shuya').style.display = 'none';
+            document.getElementById('story-content-' + perspective).style.display = 'block';
+        }
+        
+        // Switch between modal tabs
+        function switchModalTab(modal, perspective) {
+            document.getElementById(modal + '-tab-ritsu').classList.remove('active');
+            document.getElementById(modal + '-tab-shuya').classList.remove('active');
+            document.getElementById(modal + '-tab-' + perspective).classList.add('active');
+            
+            document.getElementById(modal + '-content-ritsu').style.display = 'none';
+            document.getElementById(modal + '-content-shuya').style.display = 'none';
+            document.getElementById(modal + '-content-' + perspective).style.display = 'block';
+        }
+        
+        // Open modal
+        function openModal(modal) {
+            document.getElementById(modal + '-modal').style.display = 'block';
+            loadPosts(modal + '-ritsu');
+            loadPosts(modal + '-shuya');
+        }
+        
+        // Close modal
+        function closeModal(modal) {
+            document.getElementById(modal + '-modal').style.display = 'none';
+        }
+        
+        // Show hint
+        function showHint(id) {
+            document.getElementById(id + '-hint').style.display = 'block';
+            document.getElementById(id + '-hint-btn').style.display = 'none';
+        }
+        
+        // Show detailed hint
+        function showDetailHint(id) {
+            document.getElementById(id + '-detail-hint').style.display = 'block';
+        }
+        
+        // Add post
+        function addPost(id) {
+            const title = document.getElementById(id + '-post-title').value.trim();
+            const content = document.getElementById(id + '-post-content').value.trim();
+            
+            if (!title || !content) {
+                alert('タイトルと内容を入力してください');
+                return;
+            }
+            
+            const now = new Date();
+            const post = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                date: now.toLocaleDateString() + ' ' + now.toLocaleTimeString(),
+                likes: 0
+            };
+            
+            // Get existing posts from localStorage
+            const posts = JSON.parse(localStorage.getItem('kaerimichiPosts'));
+            if (!posts[id]) {
+                posts[id] = [];
+            }
+            
+            posts[id].unshift(post);
+            localStorage.setItem('kaerimichiPosts', JSON.stringify(posts));
+            
+            // Clear form
+            document.getElementById(id + '-post-title').value = '';
+            document.getElementById(id + '-post-content').value = '';
+            
+            // Reload posts
+            loadPosts(id);
+        }
+        
+        // Load posts for a specific section
+        function loadPosts(id) {
+            const postsContainer = document.getElementById(id + '-posts');
+            if (!postsContainer) return;
+            
+            const allPosts = JSON.parse(localStorage.getItem('kaerimichiPosts')) || {};
+            const posts = allPosts[id] || [];
+            
+            let html = '';
+            if (posts.length === 0) {
+                html = '<p class="text-gray-500">まだ投稿がありません</p>';
+            } else {
+                posts.forEach(post => {
+                    html += `
+                    <div class="post" id="post-${post.id}">
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-content">${post.content}</div>
+                        <div class="post-controls">
+                            <span>${post.date}</span>
+                            <div>
+                                <span class="like-btn" onclick="likePost('${id}', ${post.id})">👍 ${post.likes}</span>
+                                <span class="delete-btn ml-3" onclick="deletePost('${id}', ${post.id})">🗑️ 削除</span>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                });
+            }
+            
+            postsContainer.innerHTML = html;
+        }
+        
+        // Load all posts for all sections
+        function loadAllPosts() {
+            const sections = [
+                'story-ritsu', 'story-shuya', 
+                'hill-ritsu', 'hill-shuya', 
+                'forest-ritsu', 'forest-shuya', 
+                'plain-ritsu', 'plain-shuya',
+                'sea-ritsu', 'sea-shuya', 
+                'river-ritsu', 'river-shuya', 
+                'cave-ritsu', 'cave-shuya'
+            ];
+            
+            sections.forEach(section => {
+                if (document.getElementById(section + '-posts')) {
+                    loadPosts(section);
+                }
+            });
+        }
+        
+        // Like a post
+        function likePost(section, postId) {
+            const posts = JSON.parse(localStorage.getItem('kaerimichiPosts'));
+            const sectionPosts = posts[section] || [];
+            
+            const postIndex = sectionPosts.findIndex(p => p.id === postId);
+            if (postIndex !== -1) {
+                sectionPosts[postIndex].likes++;
+                posts[section] = sectionPosts;
+                localStorage.setItem('kaerimichiPosts', JSON.stringify(posts));
+                loadPosts(section);
+            }
+        }
+        
+        // Initiate post deletion (show modal)
+        function deletePost(section, postId) {
+            deleteTarget = { section, postId };
+            document.getElementById('delete-modal').style.display = 'flex';
+            document.getElementById('admin-password').focus();
+            document.getElementById('password-error').style.display = 'none';
+        }
+        
+        // Cancel deletion
+        function cancelDelete() {
+            deleteTarget = null;
+            document.getElementById('delete-modal').style.display = 'none';
+            document.getElementById('admin-password').value = '';
+        }
+        
+        // Confirm deletion with password
+        function confirmDelete() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === 'admin') {
+                if (deleteTarget) {
+                    const { section, postId } = deleteTarget;
+                    const posts = JSON.parse(localStorage.getItem('kaerimichiPosts'));
+                    const sectionPosts = posts[section] || [];
+                    
+                    const newPosts = sectionPosts.filter(p => p.id !== postId);
+                    posts[section] = newPosts;
+                    localStorage.setItem('kaerimichiPosts', JSON.stringify(posts));
+                    
+                    // Close modal and reload posts
+                    document.getElementById('delete-modal').style.display = 'none';
+                    document.getElementById('admin-password').value = '';
+                    loadPosts(section);
+                }
+            } else {
+                document.getElementById('password-error').style.display = 'block';
+            }
+        }
+        
+        // Update progress for a specific perspective point
+        function updateProgress(point) {
+            const progress = JSON.parse(localStorage.getItem('kaerimichiProgress'));
+            
+            // Count checked checkboxes
+            let checkedCount = 0;
+            if (document.getElementById(point + '-ritsu-check1') && document.getElementById(point + '-ritsu-check1').checked) checkedCount++;
+            if (document.getElementById(point + '-ritsu-check2') && document.getElementById(point + '-ritsu-check2').checked) checkedCount++;
+            if (document.getElementById(point + '-shuya-check1') && document.getElementById(point + '-shuya-check1').checked) checkedCount++;
+            if (document.getElementById(point + '-shuya-check2') && document.getElementById(point + '-shuya-check2').checked) checkedCount++;
+            
+            // Calculate percentage (4 total checkboxes per point)
+            const percentage = Math.round((checkedCount / 4) * 100);
+            progress[point] = percentage;
+            
+            // Update localStorage
+            localStorage.setItem('kaerimichiProgress', JSON.stringify(progress));
+            
+            // Update UI
+            updatePointProgress(point, percentage);
+            updateOverallProgress();
+        }
+        
+        // Update progress UI for a specific point
+        function updatePointProgress(point, percentage) {
+            // Update progress badge on map
+            const pointElements = document.querySelectorAll('.' + point + ' .progress-badge');
+            pointElements.forEach(el => {
+                el.textContent = percentage + '%';
+            });
+        }
+        
+        // Update overall progress UI
+        function updateOverallProgress() {
+            const progress = JSON.parse(localStorage.getItem('kaerimichiProgress'));
+            const points = Object.keys(progress);
+            
+            let total = 0;
+            points.forEach(point => {
+                total += progress[point];
+            });
+            
+            const overallPercentage = Math.round(total / points.length);
+            
+            // Update progress bar and text
+            document.getElementById('overall-progress').style.width = overallPercentage + '%';
+            document.getElementById('overall-progress-text').textContent = overallPercentage + '%';
+        }
+        
+        // Update all progress indicators
+        function updateAllProgress() {
+            const progress = JSON.parse(localStorage.getItem('kaerimichiProgress'));
+            
+            // Set checkbox states based on progress
+            Object.keys(progress).forEach(point => {
+                updatePointProgress(point, progress[point]);
+                
+                // Calculate how many checkboxes should be checked
+                const checksToCheck = Math.round((progress[point] / 100) * 4);
+                let checksChecked = 0;
+                
+                // Check checkboxes in order if they exist
+                if (checksChecked < checksToCheck && document.getElementById(point + '-ritsu-check1')) {
+                    document.getElementById(point + '-ritsu-check1').checked = true;
+                    checksChecked++;
+                }
+                
+                if (checksChecked < checksToCheck && document.getElementById(point + '-ritsu-check2')) {
+                    document.getElementById(point + '-ritsu-check2').checked = true;
+                    checksChecked++;
+                }
+                
+                if (checksChecked < checksToCheck && document.getElementById(point + '-shuya-check1')) {
+                    document.getElementById(point + '-shuya-check1').checked = true;
+                    checksChecked++;
+                }
+                
+                if (checksChecked < checksToCheck && document.getElementById(point + '-shuya-check2')) {
+                    document.getElementById(point + '-shuya-check2').checked = true;
+                    checksChecked++;
+                }
+            });
+            
+            updateOverallProgress();
+        }
+    </script>
+</body>
+</html>
