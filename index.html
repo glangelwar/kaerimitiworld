@@ -3,23 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>帰り道ワールド</title>
+    <title>帰り道ワールド (シンプル版)</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        :root {
-            --hill-color: #4CAF50;
-            --forest-color: #2E7D32;
-            --sea-color: #673AB7;
-            --river-color: #2196F3;
-            --cave-color: #795548;
-            --plain-color: #FB8C00; /* 人物の平原の色を追加 */
-            --main-bg: #f5f5f5;
-            --modal-bg: rgba(0, 0, 0, 0.5);
-        }
-        
         body {
             font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-            background-color: var(--main-bg);
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
@@ -57,42 +46,12 @@
             font-weight: bold;
         }
         
-        .hill {
-            background-color: var(--hill-color);
-            top: 80px;
-            left: calc(50% - 60px);
-        }
-        
-        .forest {
-            background-color: var(--forest-color);
-            top: 200px;
-            left: calc(30% - 60px);
-        }
-        
-        .sea {
-            background-color: var(--sea-color);
-            top: 400px;
-            left: calc(30% - 60px);
-        }
-        
-        .river {
-            background-color: var(--river-color);
-            top: 400px;
-            left: calc(70% - 60px);
-        }
-        
-        .cave {
-            background-color: var(--cave-color);
-            top: 200px;
-            left: calc(70% - 60px);
-        }
-        
-        /* 人物の平原を追加 */
-        .plain {
-            background-color: var(--plain-color);
-            top: 300px;
-            left: calc(50% - 60px);
-        }
+        .hill { background-color: #4CAF50; top: 80px; left: calc(50% - 60px); }
+        .forest { background-color: #2E7D32; top: 200px; left: calc(30% - 60px); }
+        .sea { background-color: #673AB7; top: 400px; left: calc(30% - 60px); }
+        .river { background-color: #2196F3; top: 400px; left: calc(70% - 60px); }
+        .cave { background-color: #795548; top: 200px; left: calc(70% - 60px); }
+        .plain { background-color: #FB8C00; top: 300px; left: calc(50% - 60px); }
         
         .modal {
             display: none;
@@ -101,7 +60,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--modal-bg);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             overflow-y: auto;
         }
@@ -137,262 +96,331 @@
             border-top: none;
         }
         
-        .hint-content {
-            display: none;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-left: 3px solid #2196F3;
-            margin: 10px 0;
-        }
-        
-        .post {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .post-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .post-controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .delete-btn {
-            color: #f44336;
-            cursor: pointer;
-        }
-        
-        .like-btn {
-            color: #2196F3;
-            cursor: pointer;
-        }
-        
-        .delete-modal {
-            display: none;
+        .debug-panel {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--modal-bg);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .delete-modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            width: 300px;
-            text-align: center;
-        }
-        
-        .checkpoint {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-        }
-        
-        .checkpoint input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        
-        /* フィルターボタンのスタイル */
-        .filter-btn {
-            padding: 8px 16px;
-            margin: 5px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .filter-btn.active {
-            background-color: #4CAF50;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
             color: white;
-        }
-        
-        .post-location {
-            font-size: 0.8em;
-            color: #555;
-            margin-bottom: 5px;
-            background-color: #f1f1f1;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        
-        /* Ensure continuous flow for PDF export */
-        @media print {
-            .modal, .modal-content {
-                position: static;
-                display: block;
-                overflow: visible;
-                page-break-inside: avoid;
-            }
-            
-            .tab-content {
-                display: block;
-            }
-            
-            body {
-                background-color: white;
-            }
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 9999;
+            max-width: 300px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-8">帰り道ワールド</h1>
+        <h1 class="text-3xl font-bold text-center mb-8">帰り道ワールド (シンプル版)</h1>
         
         <!-- Top tabs for switching perspectives -->
         <div class="flex justify-center mb-8">
-            <div id="tab-ritsu" class="tab active" onclick="switchTab('ritsu')">律の視点</div>
-            <div id="tab-shuya" class="tab" onclick="switchTab('shuya')">周也の視点</div>
+            <div id="tab-ritsu" class="tab active">律の視点</div>
+            <div id="tab-shuya" class="tab">周也の視点</div>
         </div>
         
         <!-- Perspective map -->
         <div class="relative" style="height: 550px; border: 2px dashed #ccc; border-radius: 50%; width: 80%; max-width: 600px; margin: 0 auto;">
-            <div class="perspective-point hill" onclick="openModal('hill')">
+            <div id="hill-btn" class="perspective-point hill">
                 物語の丘
                 <div class="progress-badge">0%</div>
             </div>
-            <div class="perspective-point forest" onclick="openModal('forest')">
+            <div id="forest-btn" class="perspective-point forest">
                 心情の森
                 <div class="progress-badge">0%</div>
             </div>
-            <div class="perspective-point sea" onclick="openModal('sea')">
+            <div id="sea-btn" class="perspective-point sea">
                 問いの海
                 <div class="progress-badge">0%</div>
             </div>
-            <div class="perspective-point river" onclick="openModal('river')">
+            <div id="river-btn" class="perspective-point river">
                 表現の川
                 <div class="progress-badge">0%</div>
             </div>
-            <div class="perspective-point cave" onclick="openModal('cave')">
+            <div id="cave-btn" class="perspective-point cave">
                 構造の洞窟
                 <div class="progress-badge">0%</div>
             </div>
-            <!-- 人物の平原を追加 -->
-            <div class="perspective-point plain" onclick="openModal('plain')">
+            <div id="plain-btn" class="perspective-point plain">
                 人物の平原
                 <div class="progress-badge">0%</div>
             </div>
         </div>
         
         <div class="text-center mt-8 flex justify-center flex-wrap">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2" onclick="openModal('story')">
+            <button id="story-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2">
                 本文を読む
             </button>
-            <!-- 投稿一覧ボタンを追加 -->
-            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2" onclick="openModal('allposts')">
+            <button id="posts-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2">
                 投稿一覧を見る
+            </button>
+            <button id="test-btn" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded m-2">
+                動作テスト
             </button>
         </div>
         
-        <!-- Overall progress -->
-        <div class="mt-8 text-center">
-            <h3 class="text-xl font-bold">全体の進捗</h3>
-            <div class="w-full bg-gray-200 rounded-full h-4 mt-2 max-w-md mx-auto">
-                <div class="bg-green-600 h-4 rounded-full" style="width: 0%" id="overall-progress"></div>
-            </div>
-            <p class="mt-2" id="overall-progress-text">0%</p>
+        <!-- Debug Panel -->
+        <div id="debug-panel" class="debug-panel">
+            <div>デバッグログ:</div>
+            <div id="debug-log"></div>
         </div>
-    </div>
-    
-    <!-- Story Modal -->
-    <div id="story-modal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">帰り道</h2>
-                <span class="text-3xl cursor-pointer" onclick="closeModal('story')">&times;</span>
-            </div>
-            
-            <div class="mb-4">
-                <div id="story-tab-ritsu" class="tab active" onclick="switchStoryTab('ritsu')">律の視点</div>
-                <div id="story-tab-shuya" class="tab" onclick="switchStoryTab('shuya')">周也の視点</div>
-            </div>
-            
-            <div id="story-content-ritsu" class="tab-content" style="display: block;">
-                <h3 class="text-xl font-bold mb-2">1 律</h3>
-                <p class="mb-4">放課後のさわがしい玄関口で、いきなり、周也から「よっ」と声をかけられて、どきっとした。</p>
-                <p class="mb-4">「あれ。周也、野球の練習は？」</p>
-                <p class="mb-4">「今日はなし。かんとく、急用だって」</p>
-                <p class="mb-4">うわばきをぬぎながら周也が言って、くつしたにぽっかり空いた穴から、やんちゃそうな親指をのぞかせた。その指をスニーカーにおさめても、周也はなかなか歩きだそうとしない。どうやら、いっしょに帰る気のようだ。</p>
-                <p class="mb-4">小四から同じクラスの周也。家も近いから、周也が野球チームに入るまでは、よくいっしょに登下校をしていた。なのに、今日のぼくには、周也と二人きりの帰り道が、はてしなく遠く感じられる。</p>
-                <p class="mb-4">もたもたとくつをはきかえて外へ出ると、五月の空はまだ明るく、グラウンドに舞う砂ぼこりを西日が黄金色に照らしていた。</p>
-                <p class="mb-4">「あー、腹へった。今日の夕飯、何かなあ。あしたの給食、何かなあ」</p>
-                <p class="mb-4">「な、律。昨日の野球、見たか」</p>
-                <p class="mb-4">「夏休みまで、あと何日だったっけ」</p>
-                <p class="mb-4">周也の話があちこち飛ぶのは、いつものこと。なのに、今日のぼくにはついていけない。まるでなんにもなかったみたいに、周也はふだんと変わらない。ぼくだけがあのことを引きずっているみたいで、一歩前を行く紺色のパーカーが、どんどんにくらしく見えてくる。</p>
-                <p class="mb-4">今日の昼休み、友達五人でしゃべっているうちに、「どっちが好き」って話になった。「海と山は」「夏と冬は」「ハンバーグとぎょうざは」「歯ブラシのかたいのとやわらかいのは」――みんなで順に質問を出し合い、「海」「海」「山」「海」と、ぽんぽん答えていく。そのテンポに、ぼくだけついていけなかった。「どっちかなあ」とか、「どっちもかな」とか、ひとりでごにょごにょ言っていたら、周也が急にいらついた目でぼくをにらんだんだ。</p>
-                <p class="mb-4">「どっちも好きってのは、どっちも好きじゃないのと、いっしょじゃないの」</p>
-                <p class="mb-4">先のとがったするどいものが、みぞおちのあたりにずきっとささった。そんな気がした。そのまま今もささり続けて、歩いても、歩いても、ふりおとせない。</p>
-                <p class="mb-4">返事をしないぼくに白けたのか、周也の口数もしだいに減って、大通りの歩道橋をわたるころには、二人してすっかりだまりこんでいた。階段をのぼる周也と、ぼくとのあいだに、距離が開く。広がる。ここ一年でぐんと高くなった頭の位置。たくましくなった足どり。ぼくより半年早く生まれた周也は、これからもずっと、どんなこともテンポよく乗りこえて、ぐんぐん前へ進んで行くんだろう。</p>
-                <p class="mb-4">はぁ。声にならないため息が、ぼくの口からこぼれて、足元のかげにとけていく。どうして、ぼく、すぐに立ち止まっちゃうんだろう。思っていることが、なんで言えないんだろう。ぼくは海のこんなところが好きだ。山のこんなところも好きだ。その「こんな」をうまく言葉にできたなら、周也とちゃんとかたを並べて、歩いていけるのかな。「どっちも好き」と「どっちも好きじゃない」がいっしょなら、「言えなかったこと」と「なかったこと」もいっしょになっちゃうのかな。考えるほどに、みぞおちのあたりが重くなる。</p>
-                <p class="mb-4">市立公園内の遊歩道にさしかかったころには、ぼくは周也に三歩以上もおくれをとっていた。もうだめだ。追いつけない。あきらめの境地でぼくは天をあおいだ。信じがたいものを見たのは、そのときだった。</p>
-                <p class="mb-4">空一面からシャワーの水が降ってきた。</p>
-                <p class="mb-4">もちろん、そんなわけはない。なのに、なぜだかとっさにプールの後に浴びるシャワーがうかんだのは、公園の新緑がふりまく初夏のにおいのせいかもしれない。</p>
-                <p class="mb-4">「うおっ」</p>
-                <p class="mb-4">「何これ」</p>
-                <p class="mb-4">頭に、顔に、体中に打ちつける水滴を雨と認めるのには、少し時間がかかった。晴れているのに雨なんて、不自然すぎる。ぼくと周也はむやみにじたばたし、意味もなくとんだりはねたりして、またたく間に天気雨が通りすぎていくと、たがいのぬれた頭を指さし合って笑った。</p>
-                <p class="mb-4">本当に、あっというまのことだったんだ。ざざっと水が降ってきて、何かを洗い流した。周也の気どった前がみがぺたっとなったのがゆかいで、ぼくはさんざん腹をかかえ、気がつくと、みぞおちの異物が消えてきた。</p>
-                <p class="mb-4">単純すぎる自分がはずかしくなったのは、笑いの大波が引いてからだ。うっかりはしゃいだばつの悪さをかくすように、ぼくはすっと目をふせた。アスファルトの水たまりに西日の反射がきらきら光る。そのまぶしさに背中をおされるように、今だ、と思った。今、言わなきゃ、きっと二度と言えない。</p>
-                <p class="mb-4">「ぼく、晴れが好きだけど、たまには、雨も好きだ」</p>
-                <p class="mb-4">勇気をふりしぼったわりには、しどろもどろのたよりない声が出た。</p>
-                <p class="mb-4">「ほんとに両方、好きなんだ」</p>
-                <p class="mb-4">周也はしばしまばたきを止めて、まじまじとぼくの顔を見つめ、それから、こっくりうなずいた。周也にしてはめずらしく言葉がない。なのに、わかってもらえた気がした。</p>
-                <p class="mb-4">「行こっか」</p>
-                <p class="mb-4">「うん」</p>
-                <p class="mb-4">ぬれた地面にさっきよりも軽快な足音をきざんで、ぼくたちはまた歩きだした。</p>
+        
+        <!-- Test Modal -->
+        <div id="test-modal" class="modal">
+            <div class="modal-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">動作テスト</h2>
+                    <span id="test-close" class="text-3xl cursor-pointer">&times;</span>
+                </div>
                 
-                <!-- Post form -->
-                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
-                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
-                    <div id="story-ritsu-posts" class="mb-4">
-                        <!-- Posts will be loaded here -->
+                <div class="p-4 bg-gray-100 rounded-lg mb-4">
+                    <h3 class="text-xl font-bold mb-2">基本機能テスト</h3>
+                    <p>各ボタンをクリックしてテストしてください。正常に動作すれば緑色になります。</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <button id="test-modal-open" class="p-2 border rounded bg-gray-200">モーダル開閉テスト</button>
+                        <button id="test-tab-switch" class="p-2 border rounded bg-gray-200">タブ切替テスト</button>
+                        <button id="test-localstorage" class="p-2 border rounded bg-gray-200">ローカルストレージテスト</button>
+                        <button id="test-dom-update" class="p-2 border rounded bg-gray-200">DOM更新テスト</button>
                     </div>
-                    <div>
-                        <input type="text" id="story-ritsu-post-title" placeholder="タイトル" class="w-full p-2 mb-2 border rounded">
-                        <textarea id="story-ritsu-post-content" placeholder="内容" class="w-full p-2 mb-2 border rounded" rows="4"></textarea>
-                        <button onclick="addPost('story-ritsu')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">投稿する</button>
+                </div>
+                
+                <div id="test-result" class="p-4 bg-gray-100 rounded-lg">
+                    <h3 class="text-xl font-bold mb-2">テスト結果</h3>
+                    <div id="test-result-content" class="border p-4 rounded bg-white">
+                        テストボタンをクリックしてください。
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <script>
+        // デバッグログ機能
+        function log(message) {
+            const logElement = document.getElementById('debug-log');
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + 
+                          now.getMinutes().toString().padStart(2, '0') + ':' + 
+                          now.getSeconds().toString().padStart(2, '0');
             
-            <div id="story-content-shuya" class="tab-content">
-                <h3 class="text-xl font-bold mb-2">2 周也</h3>
-                <p class="mb-4">何もなかったみたいにふるまえば、何もなかったことになる。そんなあまい考えをすてたのは、校門を出てから数分後、最初の角を曲がったあたりだった。どんなに必死で話題をふっても、律はうんともすんとも言わない。背中に感じる気配は冷たくなるばかり。やっぱり、律はおこってるんだ。そりゃそうだ。</p>
-                <p class="mb-4">昼休み、みんなで話をしていたとき、はっきりしない律にじりじりして、つい、言わなくてもいいことを言った。軽くつっこんだつもりが、律の顔を見て、重くひびいてしまったのが分かった。まずい、と思うも、もうおそい。以降、絶対にぼくの顔を見ようとしない律のことが気になって、野球の練習を休んでまで玄関口で待ちぶせをしたのに、いざ並んで歩きだすと、気まずいちんもくにたえられず、またぺらぺらとよけいなことばかりしゃべっている自分がいた。</p>
-                <p class="mb-4">「この前、給食でプリンが出てから、もうずいぶんたつよな」</p>
-                <p class="mb-4">「むし歯が自然に治ればなあ」</p>
-                <p class="mb-4">「山田んちの姉ちゃん、腹話術が得意なの、知ってたか」</p>
-                <p class="mb-4">何を言っても、背中ごしに聞こえてくるのは、さえない足音だけ。ぼくがしゃべればしゃべるほど、その音は遠のいていくような気がする。</p>
-                <p class="mb-4">ふいに母親の小言が頭をかすめたのは、下校中の人かげがあっちへこっちへ枝分かれして、道がすいてきたころだった。</p>
-                <p class="mb-4">「周也。あなた、おしゃべりなくせして、どうして会話のキャッチボールができないの。会話っていうのは、相手の言葉を受け止めて、それをきちんと投げ返すことよ。あなたは一人でぽんぽん球を放っているだけで、それじゃ、ピンポンの壁打ちといっしょ」</p>
-                <p class="mb-4">ピンポン？　なんだそりゃ、とそのときは思ったけど、今、こうして壁みたいにだまりこくっている律を相手にしていると、その意味がわかるような気がしてくる。たしかに、ぼくの言葉は軽すぎる。ぽんぽん、むだに打ちすぎる。もっとじっくりねらいを定めて、いい球を投げられたなら、律だって何か返してくれるんじゃないか。</p>
-                <p class="mb-4">でも、いい球って、どんなのだろう。考えたとたんに、舌が止まった。何も言えない。言葉が出ない。どうしよう。あわてるほどにぼくの口は動かなくなって、逆に、足は律からにげるようにスピードを増していく。</p>
-                <p class="mb-4">無言のまま歩道橋をわたった先には、しかも、市立公園が待ちうけていた。道の両側から木々のこずえがたれこめた通り道。人声も、車の音も、工事の騒音も聞こえない緑のトンネル。ぼくはこの静けさが大の苦手だった。</p>
-                <p class="mb-4">正確にいうと、だれかといるときのちんもくが苦手だ。たちまち、そわそわと落ちつきをなくす。何か言わなきゃってあせる。野球チームに入る前、律とよくいっしょに帰っていたころも、ぼくはこの公園を通りかかるたび、しんとした空気をかきまぜるみたいに、ピンポン球を乱打せずにいられなかった。律のほうはちんもくなんてちっとも気にせず、いつだって、マイペースなものだったけど。</p>
-                <p class="mb-4">そっと後ろをふりかえると、やっぱり、今日も律はおっとりと一歩一歩をきざんでいる。まぶしげに目を細め、木もれ日をふりあおぐしぐさにも、よゆうが見てとれる。ぼくにはない落ちつきっぷりに見入っていると、とつぜん、律の両目が大きく見開かれた。</p>
-                <p class="mb-4">なんだ、と思う間もなく、ぼくのほおに最初の一滴が当たった。大つぶの水玉がみるみる地面をおおっていく。天気雨――頭ではわかっていながらも、ピンポン球のことばかり考えていたせいか、空からじゃんじゃん降ってくるそれが、ぼくの目には一しゅん、無数の白い球みたいに映ったんだ。</p>
-                <p class="mb-4">ぼくがむだに放ってきた球の逆襲。「うおっ」と思わずとび上がったら、後ろからも「何これ」と律の声がして、ぼくたちは全身に雨を浴びながら、しばらくのあいだばたばたと暴れまくった。はねあがる水しぶき。びしょぬれのくつ。たがいのあわてっぷり。何もかもがむしょうにおかしくて、雨が通りすぎるなり、笑いがあふれだした。律もいっしょに笑ってくれたのがうれしくて、ぼくはことさらに大声をはりあげた。</p>
-                <p class="mb-4">はっとしたのは、爆発的な笑いが去った後、律が急にひとみを険しくしてつぶやいたときだ。</p>
-                <p class="mb-4">「ぼく、晴れが好きだけど、たまには、雨も好きだ。ほんとに両方、好きなんだ」</p>
-                <p class="mb-4">たしかに、そうだ。晴れがいいけど、こんな雨なら大かんげい。どっちも好きってこともある。心で賛成しながらも、ぼくはとっさにそれを言葉にできなかった。こんなときにかぎって口が動かず、できたのは、だまってうなずくだけ。なのに、なぜだか律は雨上がりみたいなえがおにもどって、ぼくにうなずきかえしたんだ。</p>
-                <p class="mb-4">「行こっか」</p>
-                <p class="mb-4">「うん」</p>
-                <p class="mb-4">しめった土のにおいがただようトンネルを、律と並んで再び歩きだしながら、ひょっとして――と、ぼくは思った。投げそこなった。でも、ぼくは初めて、律の言葉をちゃんと受けとめられたのかもしれない。</p>
+            logElement.innerHTML += `<div>[${time}] ${message}</div>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        // 動作確認用関数
+        function testModalOpen() {
+            log('モーダル開閉テスト開始');
+            try {
+                const testModal = document.getElementById('test-modal');
+                testModal.style.display = 'none';
+                setTimeout(() => {
+                    testModal.style.display = 'block';
+                    document.getElementById('test-modal-open').classList.remove('bg-gray-200');
+                    document.getElementById('test-modal-open').classList.add('bg-green-200');
+                    log('モーダル開閉テスト成功');
+                    document.getElementById('test-result-content').innerHTML += '<div>✅ モーダル開閉テスト成功</div>';
+                }, 500);
+            } catch (e) {
+                log('エラー: ' + e.message);
+                document.getElementById('test-modal-open').classList.add('bg-red-200');
+                document.getElementById('test-result-content').innerHTML += '<div>❌ モーダル開閉テスト失敗: ' + e.message + '</div>';
+            }
+        }
+        
+        function testTabSwitch() {
+            log('タブ切替テスト開始');
+            try {
+                const ritsuTab = document.getElementById('tab-ritsu');
+                const shuyaTab = document.getElementById('tab-shuya');
                 
-                <!-- Post form for Shuya perspective -->
-                <div class="mt-8 p-4 bg-gray-100 rounded-lg">
-                    <h3 class="text-xl font-bold mb-4">みんなの書き込み</h3>
+                if (ritsuTab.classList.contains('active')) {
+                    ritsuTab.classList.remove('active');
+                    shuyaTab.classList.add('active');
+                    setTimeout(() => {
+                        ritsuTab.classList.add('active');
+                        shuyaTab.classList.remove('active');
+                        document.getElementById('test-tab-switch').classList.remove('bg-gray-200');
+                        document.getElementById('test-tab-switch').classList.add('bg-green-200');
+                        log('タブ切替テスト成功');
+                        document.getElementById('test-result-content').innerHTML += '<div>✅ タブ切替テスト成功</div>';
+                    }, 500);
+                } else {
+                    shuyaTab.classList.remove('active');
+                    ritsuTab.classList.add('active');
+                    setTimeout(() => {
+                        document.getElementById('test-tab-switch').classList.remove('bg-gray-200');
+                        document.getElementById('test-tab-switch').classList.add('bg-green-200');
+                        log('タブ切替テスト成功');
+                        document.getElementById('test-result-content').innerHTML += '<div>✅ タブ切替テスト成功</div>';
+                    }, 500);
+                }
+            } catch (e) {
+                log('エラー: ' + e.message);
+                document.getElementById('test-tab-switch').classList.add('bg-red-200');
+                document.getElementById('test-result-content').innerHTML += '<div>❌ タブ切替テスト失敗: ' + e.message + '</div>';
+            }
+        }
+        
+        function testLocalStorage() {
+            log('ローカルストレージテスト開始');
+            try {
+                // テストデータの保存
+                localStorage.setItem('test-data', JSON.stringify({
+                    testValue: 'テスト成功',
+                    timestamp: new Date().toISOString()
+                }));
                 
+                // テストデータの読み込み
+                const data = JSON.parse(localStorage.getItem('test-data'));
+                if (data && data.testValue === 'テスト成功') {
+                    document.getElementById('test-localstorage').classList.remove('bg-gray-200');
+                    document.getElementById('test-localstorage').classList.add('bg-green-200');
+                    log('ローカルストレージテスト成功');
+                    document.getElementById('test-result-content').innerHTML += '<div>✅ ローカルストレージテスト成功</div>';
+                } else {
+                    throw new Error('データの整合性エラー');
+                }
+            } catch (e) {
+                log('エラー: ' + e.message);
+                document.getElementById('test-localstorage').classList.add('bg-red-200');
+                document.getElementById('test-result-content').innerHTML += '<div>❌ ローカルストレージテスト失敗: ' + e.message + '</div>';
+                
+                if (e.name === 'SecurityError' || e.name === 'QuotaExceededError') {
+                    document.getElementById('test-result-content').innerHTML += 
+                        '<div class="text-red-500 font-bold mt-2">ブラウザのセキュリティ設定によりローカルストレージにアクセスできません。' +
+                        'シークレットモードではなく通常モードで開いてください。</div>';
+                }
+            }
+        }
+        
+        function testDomUpdate() {
+            log('DOM更新テスト開始');
+            try {
+                // テスト用の進捗バッジを更新
+                const badges = document.querySelectorAll('.progress-badge');
+                badges.forEach(badge => {
+                    const currentValue = parseInt(badge.textContent) || 0;
+                    badge.textContent = (currentValue + 10) + '%';
+                });
+                
+                document.getElementById('test-dom-update').classList.remove('bg-gray-200');
+                document.getElementById('test-dom-update').classList.add('bg-green-200');
+                log('DOM更新テスト成功');
+                document.getElementById('test-result-content').innerHTML += '<div>✅ DOM更新テスト成功</div>';
+            } catch (e) {
+                log('エラー: ' + e.message);
+                document.getElementById('test-dom-update').classList.add('bg-red-200');
+                document.getElementById('test-result-content').innerHTML += '<div>❌ DOM更新テスト失敗: ' + e.message + '</div>';
+            }
+        }
+        
+        // モーダル開閉関数
+        function openModal(modalId) {
+            log(`モーダルを開きます: ${modalId}`);
+            const modal = document.getElementById(modalId + '-modal');
+            if (modal) {
+                modal.style.display = 'block';
+            } else {
+                log(`エラー: モーダル要素 ${modalId}-modal が見つかりません`);
+            }
+        }
+        
+        function closeModal(modalId) {
+            log(`モーダルを閉じます: ${modalId}`);
+            const modal = document.getElementById(modalId + '-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            } else {
+                log(`エラー: モーダル要素 ${modalId}-modal が見つかりません`);
+            }
+        }
+        
+        // DOMContentLoadedイベントでの初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            log('ページを初期化しています...');
+            
+            try {
+                // スポット要素のクリックイベント
+                document.getElementById('hill-btn').addEventListener('click', function() {
+                    log('物語の丘ボタンがクリックされました');
+                    alert('物語の丘ボタンがクリックされました');
+                });
+                
+                document.getElementById('forest-btn').addEventListener('click', function() {
+                    log('心情の森ボタンがクリックされました');
+                    alert('心情の森ボタンがクリックされました');
+                });
+                
+                document.getElementById('sea-btn').addEventListener('click', function() {
+                    log('問いの海ボタンがクリックされました');
+                    alert('問いの海ボタンがクリックされました');
+                });
+                
+                document.getElementById('river-btn').addEventListener('click', function() {
+                    log('表現の川ボタンがクリックされました');
+                    alert('表現の川ボタンがクリックされました');
+                });
+                
+                document.getElementById('cave-btn').addEventListener('click', function() {
+                    log('構造の洞窟ボタンがクリックされました');
+                    alert('構造の洞窟ボタンがクリックされました');
+                });
+                
+                document.getElementById('plain-btn').addEventListener('click', function() {
+                    log('人物の平原ボタンがクリックされました');
+                    alert('人物の平原ボタンがクリックされました');
+                });
+                
+                // メニューボタンのクリックイベント
+                document.getElementById('story-btn').addEventListener('click', function() {
+                    log('本文を読むボタンがクリックされました');
+                    alert('本文を読むボタンがクリックされました');
+                });
+                
+                document.getElementById('posts-btn').addEventListener('click', function() {
+                    log('投稿一覧ボタンがクリックされました');
+                    alert('投稿一覧ボタンがクリックされました');
+                });
+                
+                document.getElementById('test-btn').addEventListener('click', function() {
+                    log('動作テストボタンがクリックされました');
+                    openModal('test');
+                });
+                
+                // テスト用モーダルの閉じるボタン
+                document.getElementById('test-close').addEventListener('click', function() {
+                    closeModal('test');
+                });
+                
+                // タブ切り替え
+                document.getElementById('tab-ritsu').addEventListener('click', function() {
+                    log('律の視点タブがクリックされました');
+                    document.getElementById('tab-ritsu').classList.add('active');
+                    document.getElementById('tab-shuya').classList.remove('active');
+                });
+                
+                document.getElementById('tab-shuya').addEventListener('click', function() {
+                    log('周也の視点タブがクリックされました');
+                    document.getElementById('tab-shuya').classList.add('active');
+                    document.getElementById('tab-ritsu').classList.remove('active');
+                });
+                
+                // テストボタン
+                document.getElementById('test-modal-open').addEventListener('click', testModalOpen);
+                document.getElementById('test-tab-switch').addEventListener('click', testTabSwitch);
+                document.getElementById('test-localstorage').addEventListener('click', testLocalStorage);
+                document.getElementById('test-dom-update').addEventListener('click', testDomUpdate);
+                
+                log('初期化完了 - すべてのイベントリスナーが登録されました');
+            } catch (e) {
+                log('初期化エラー: ' + e.message);
+            }
+        });
+    </script>
+</body>
+</html>
