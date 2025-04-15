@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>帰り道ワールド (シンプル版)</title>
+    <title>帰り道ワールド (基本モーダル版)</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
@@ -96,6 +96,10 @@
             border-top: none;
         }
         
+        .tab-content.active {
+            display: block;
+        }
+        
         .debug-panel {
             position: fixed;
             bottom: 10px;
@@ -115,7 +119,7 @@
 </head>
 <body>
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-8">帰り道ワールド (シンプル版)</h1>
+        <h1 class="text-3xl font-bold text-center mb-8">帰り道ワールド (基本モーダル版)</h1>
         
         <!-- Top tabs for switching perspectives -->
         <div class="flex justify-center mb-8">
@@ -169,6 +173,77 @@
             <div id="debug-log"></div>
         </div>
         
+        <!-- Hill Modal (物語の丘) -->
+        <div id="hill-modal" class="modal">
+            <div class="modal-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">物語の丘</h2>
+                    <span id="hill-close" class="text-3xl cursor-pointer">&times;</span>
+                </div>
+                
+                <div class="mb-4">
+                    <div id="hill-tab-ritsu" class="tab active">律の視点</div>
+                    <div id="hill-tab-shuya" class="tab">周也の視点</div>
+                </div>
+                
+                <div id="hill-content-ritsu" class="tab-content active">
+                    <p>「律」の視点から見た物語の展開や出来事に注目してみましょう。</p>
+                    <p class="mt-4">物語のポイント:</p>
+                    <ul class="list-disc pl-5 mt-2">
+                        <li>放課後に周也と偶然出会い、一緒に帰ることになる</li>
+                        <li>昼休みの「どっちが好き」という質問で傷ついた気持ち</li>
+                        <li>歩きながら広がる周也との距離感</li>
+                        <li>突然の天気雨が二人の関係性を変える転換点になる</li>
+                        <li>雨上がりに「ぼく、晴れが好きだけど、たまには、雨も好きだ」と本音を伝える</li>
+                    </ul>
+                </div>
+                
+                <div id="hill-content-shuya" class="tab-content">
+                    <p>「周也」の視点から見た物語の展開や出来事に注目してみましょう。</p>
+                    <p class="mt-4">物語のポイント:</p>
+                    <ul class="list-disc pl-5 mt-2">
+                        <li>律を待ち、一緒に帰ろうとする</li>
+                        <li>昼休みに言ってしまった言葉を後悔している</li>
+                        <li>気まずい沈黙を埋めようと話し続ける</li>
+                        <li>沈黙が苦手で、いつも話し続けてしまう自分の性格</li>
+                        <li>天気雨が二人の関係性の転換点になる</li>
+                        <li>律の言葉を真に受け止める経験</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Story Modal (本文) -->
+        <div id="story-modal" class="modal">
+            <div class="modal-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">帰り道</h2>
+                    <span id="story-close" class="text-3xl cursor-pointer">&times;</span>
+                </div>
+                
+                <div class="mb-4">
+                    <div id="story-tab-ritsu" class="tab active">律の視点</div>
+                    <div id="story-tab-shuya" class="tab">周也の視点</div>
+                </div>
+                
+                <div id="story-content-ritsu" class="tab-content active">
+                    <h3 class="text-xl font-bold mb-2">1 律</h3>
+                    <p class="mb-4">放課後のさわがしい玄関口で、いきなり、周也から「よっ」と声をかけられて、どきっとした。</p>
+                    <p class="mb-4">「あれ。周也、野球の練習は？」</p>
+                    <p class="mb-4">「今日はなし。かんとく、急用だって」</p>
+                    <!-- ここに本文の残りを追加 -->
+                    <p class="mb-4">（本文の続き）</p>
+                </div>
+                
+                <div id="story-content-shuya" class="tab-content">
+                    <h3 class="text-xl font-bold mb-2">2 周也</h3>
+                    <p class="mb-4">何もなかったみたいにふるまえば、何もなかったことになる。そんなあまい考えをすてたのは、校門を出てから数分後、最初の角を曲がったあたりだった。どんなに必死で話題をふっても、律はうんともすんとも言わない。背中に感じる気配は冷たくなるばかり。やっぱり、律はおこってるんだ。そりゃそうだ。</p>
+                    <!-- ここに本文の残りを追加 -->
+                    <p class="mb-4">（本文の続き）</p>
+                </div>
+            </div>
+        </div>
+        
         <!-- Test Modal -->
         <div id="test-modal" class="modal">
             <div class="modal-content">
@@ -210,6 +285,47 @@
             
             logElement.innerHTML += `<div>[${time}] ${message}</div>`;
             logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        // モーダル開閉関数
+        function openModal(modalId) {
+            log(`モーダルを開きます: ${modalId}`);
+            const modal = document.getElementById(modalId + '-modal');
+            if (modal) {
+                modal.style.display = 'block';
+            } else {
+                log(`エラー: モーダル要素 ${modalId}-modal が見つかりません`);
+                alert(`エラー: モーダル要素 ${modalId}-modal が見つかりません`);
+            }
+        }
+        
+        function closeModal(modalId) {
+            log(`モーダルを閉じます: ${modalId}`);
+            const modal = document.getElementById(modalId + '-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            } else {
+                log(`エラー: モーダル要素 ${modalId}-modal が見つかりません`);
+            }
+        }
+        
+        // タブ切替関数
+        function switchTab(category, perspective) {
+            log(`タブを切り替えます: ${category}-${perspective}`);
+            
+            // タブの切り替え
+            document.getElementById(`${category}-tab-ritsu`).classList.remove('active');
+            document.getElementById(`${category}-tab-shuya`).classList.remove('active');
+            document.getElementById(`${category}-tab-${perspective}`).classList.add('active');
+            
+            // コンテンツの切り替え
+            document.getElementById(`${category}-content-ritsu`).classList.remove('active');
+            document.getElementById(`${category}-content-ritsu`).style.display = 'none';
+            document.getElementById(`${category}-content-shuya`).classList.remove('active');
+            document.getElementById(`${category}-content-shuya`).style.display = 'none';
+            
+            document.getElementById(`${category}-content-${perspective}`).classList.add('active');
+            document.getElementById(`${category}-content-${perspective}`).style.display = 'block';
         }
         
         // 動作確認用関数
@@ -289,12 +405,6 @@
                 log('エラー: ' + e.message);
                 document.getElementById('test-localstorage').classList.add('bg-red-200');
                 document.getElementById('test-result-content').innerHTML += '<div>❌ ローカルストレージテスト失敗: ' + e.message + '</div>';
-                
-                if (e.name === 'SecurityError' || e.name === 'QuotaExceededError') {
-                    document.getElementById('test-result-content').innerHTML += 
-                        '<div class="text-red-500 font-bold mt-2">ブラウザのセキュリティ設定によりローカルストレージにアクセスできません。' +
-                        'シークレットモードではなく通常モードで開いてください。</div>';
-                }
             }
         }
         
@@ -319,72 +429,51 @@
             }
         }
         
-        // モーダル開閉関数
-        function openModal(modalId) {
-            log(`モーダルを開きます: ${modalId}`);
-            const modal = document.getElementById(modalId + '-modal');
-            if (modal) {
-                modal.style.display = 'block';
-            } else {
-                log(`エラー: モーダル要素 ${modalId}-modal が見つかりません`);
-            }
-        }
-        
-        function closeModal(modalId) {
-            log(`モーダルを閉じます: ${modalId}`);
-            const modal = document.getElementById(modalId + '-modal');
-            if (modal) {
-                modal.style.display = 'none';
-            } else {
-                log(`エラー: モーダル要素 ${modalId}-modal が見つかりません`);
-            }
-        }
-        
         // DOMContentLoadedイベントでの初期化
         document.addEventListener('DOMContentLoaded', function() {
             log('ページを初期化しています...');
             
             try {
-                // スポット要素のクリックイベント
+                // スポット要素のクリックイベント - 実際にモーダルを開くように修正
                 document.getElementById('hill-btn').addEventListener('click', function() {
                     log('物語の丘ボタンがクリックされました');
-                    alert('物語の丘ボタンがクリックされました');
+                    openModal('hill');
                 });
                 
                 document.getElementById('forest-btn').addEventListener('click', function() {
                     log('心情の森ボタンがクリックされました');
-                    alert('心情の森ボタンがクリックされました');
+                    alert('心情の森のモーダルはまだ実装されていません');
                 });
                 
                 document.getElementById('sea-btn').addEventListener('click', function() {
                     log('問いの海ボタンがクリックされました');
-                    alert('問いの海ボタンがクリックされました');
+                    alert('問いの海のモーダルはまだ実装されていません');
                 });
                 
                 document.getElementById('river-btn').addEventListener('click', function() {
                     log('表現の川ボタンがクリックされました');
-                    alert('表現の川ボタンがクリックされました');
+                    alert('表現の川のモーダルはまだ実装されていません');
                 });
                 
                 document.getElementById('cave-btn').addEventListener('click', function() {
                     log('構造の洞窟ボタンがクリックされました');
-                    alert('構造の洞窟ボタンがクリックされました');
+                    alert('構造の洞窟のモーダルはまだ実装されていません');
                 });
                 
                 document.getElementById('plain-btn').addEventListener('click', function() {
                     log('人物の平原ボタンがクリックされました');
-                    alert('人物の平原ボタンがクリックされました');
+                    alert('人物の平原のモーダルはまだ実装されていません');
                 });
                 
-                // メニューボタンのクリックイベント
+                // メニューボタンのクリックイベント - 実際にモーダルを開くように修正
                 document.getElementById('story-btn').addEventListener('click', function() {
                     log('本文を読むボタンがクリックされました');
-                    alert('本文を読むボタンがクリックされました');
+                    openModal('story');
                 });
                 
                 document.getElementById('posts-btn').addEventListener('click', function() {
                     log('投稿一覧ボタンがクリックされました');
-                    alert('投稿一覧ボタンがクリックされました');
+                    alert('投稿一覧のモーダルはまだ実装されていません');
                 });
                 
                 document.getElementById('test-btn').addEventListener('click', function() {
@@ -392,12 +481,37 @@
                     openModal('test');
                 });
                 
-                // テスト用モーダルの閉じるボタン
+                // モーダルの閉じるボタン
+                document.getElementById('hill-close').addEventListener('click', function() {
+                    closeModal('hill');
+                });
+                
+                document.getElementById('story-close').addEventListener('click', function() {
+                    closeModal('story');
+                });
+                
                 document.getElementById('test-close').addEventListener('click', function() {
                     closeModal('test');
                 });
                 
-                // タブ切り替え
+                // モーダル内のタブ切り替え
+                document.getElementById('hill-tab-ritsu').addEventListener('click', function() {
+                    switchTab('hill', 'ritsu');
+                });
+                
+                document.getElementById('hill-tab-shuya').addEventListener('click', function() {
+                    switchTab('hill', 'shuya');
+                });
+                
+                document.getElementById('story-tab-ritsu').addEventListener('click', function() {
+                    switchTab('story', 'ritsu');
+                });
+                
+                document.getElementById('story-tab-shuya').addEventListener('click', function() {
+                    switchTab('story', 'shuya');
+                });
+                
+                // メインページのタブ切り替え
                 document.getElementById('tab-ritsu').addEventListener('click', function() {
                     log('律の視点タブがクリックされました');
                     document.getElementById('tab-ritsu').classList.add('active');
@@ -416,6 +530,12 @@
                 document.getElementById('test-localstorage').addEventListener('click', testLocalStorage);
                 document.getElementById('test-dom-update').addEventListener('click', testDomUpdate);
                 
+                // タブコンテンツの初期表示設定
+                document.getElementById('hill-content-ritsu').style.display = 'block';
+                document.getElementById('hill-content-shuya').style.display = 'none';
+                document.getElementById('story-content-ritsu').style.display = 'block';
+                document.getElementById('story-content-shuya').style.display = 'none';
+                
                 log('初期化完了 - すべてのイベントリスナーが登録されました');
             } catch (e) {
                 log('初期化エラー: ' + e.message);
@@ -424,3 +544,4 @@
     </script>
 </body>
 </html>
+
